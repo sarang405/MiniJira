@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import api from "../api/axios";
 import { FiSend, FiTrash2, FiEdit2, FiCheck, FiX } from "react-icons/fi";
 
-const POLL_INTERVAL = 5000; 
 
 const CommentSection = ({ issueId }) => {
   const [comments, setComments] = useState([]);
@@ -23,7 +22,6 @@ const CommentSection = ({ issueId }) => {
   useEffect(() => {
     fetchComments();
 
-    timerRef.current = setInterval(fetchComments, POLL_INTERVAL);
     return () => clearInterval(timerRef.current);
   }, [issueId]);
 
