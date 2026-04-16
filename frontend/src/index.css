@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@plugin "flowbite/plugin";
+
+@source "../node_modules/flowbite-react/dist/esm/**/*.mjs";
+@source "./**/*.{js,jsx,ts,tsx}";
+
+@theme {
+  /* Define specific Sidebar colors here */
+  --color-sidebar-bg: #1e293b;
+  --color-sidebar-active: #4f46e5;
+  --color-sidebar-border: #334155;
+  --color-hustle-indigo: #6366f1;
+}
+
+@layer base {
+  input {
+    @apply outline-none;
+  }
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
