@@ -21,8 +21,9 @@ const ProjectBoard = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    api.get("/accounts/profile/")
-      .then(res => setCurrentUser(res.data))
+    api
+      .get("/accounts/profile/")
+      .then((res) => setCurrentUser(res.data))
       .catch(() => console.error("Failed to load user"));
   }, []);
   const [isCreating, setIsCreating] = useState(false);
@@ -53,7 +54,7 @@ const ProjectBoard = () => {
       refreshProject();
       toast.success("Task deleted");
     } catch (err) {
-      toast.error("Failed to delete task");
+      alert("CATCH BLOCK HIT"); // 👈 MUST SHOW
     }
   };
 
@@ -98,7 +99,22 @@ const ProjectBoard = () => {
       refreshProject();
       toast.success("Issue created");
     } catch (err) {
-      toast.error("Failed to create issue");
+      const data = err.response?.data;
+
+      let message = "Failed to create issue";
+
+      if (typeof data === "string") {
+        message = data;
+      } else if (Array.isArray(data)) {
+        message = data[0];
+      } else if (data?.detail) {
+        message = data.detail;
+      } else if (typeof data === "object") {
+        const firstError = Object.values(data)[0];
+        message = Array.isArray(firstError) ? firstError[0] : firstError;
+      }
+
+      toast.error(message);
     }
   };
 
@@ -229,10 +245,11 @@ const ProjectBoard = () => {
                       ref={provided.innerRef}
                       className={`
                         ${isExpanded ? "flex" : "hidden"} lg:flex 
-                        flex-col flex-1 px-3 pb-4 space-y-4 mt-2
+                        flex-col px-3 pb-4 space-y-4 mt-2
                         overflow-y-auto transition-colors duration-300 
                         ${snapshot.isDraggingOver ? "bg-blue-100/30" : "bg-transparent"}
-                        min-h-[200px] lg:min-h-0
+                        
+                        max-h-[300px]   /* ✅ LIMIT HEIGHT (~3 tasks) */
                       `}
                     >
                       {columnTasks.map((issue, index) => (

@@ -1,3 +1,6 @@
+from datetime import date
+import re
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from ..models import Issue, Comment, Attachment, Tag
@@ -82,6 +85,9 @@ class IssueSerializer(serializers.ModelSerializer):
         if tags is not None:
             issue.tags.set(tags)
         return issue
+     # make sure this is at the top
+
+    
 
     
     class Meta:
@@ -122,6 +128,21 @@ class IssueSerializer(serializers.ModelSerializer):
     def validate_title(self, value):
         if not value.strip():
             raise serializers.ValidationError("Title cannot be empty")
+        return value
+    
+    def validate_title(self, value):
+        value = value.strip()
+
+        if not re.match(r'^[A-Za-z][A-Za-z0-9\s\-]*$', value):
+            raise serializers.ValidationError(
+                "Title must start with a letter and can contain letters, numbers, spaces, and hyphens."
+            )
+
+        return value
+    
+    def validate_due_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError("Due date cannot be in the past.")
         return value
 
 

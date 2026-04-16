@@ -2,6 +2,9 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from ..models import Project, Membership
 from apps.issues.models import Issue 
+import re
+from datetime import date
+
 
 User = get_user_model()
 
@@ -54,6 +57,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             return int((done / total) * 100)
         except Exception:
             return 0
+    
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -75,3 +79,22 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
         return project
+    
+    def validate_name(self, value):
+        value = value.strip()
+
+        if not re.match(r'^[A-Za-z]+(?: [A-Za-z]+)*$', value):
+            raise serializers.ValidationError(
+                "Project name must start with a letter and contain only letters and single spaces between words."
+            )
+
+        return value 
+    from datetime import date
+
+    def validate_deadline(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError(
+                "Deadline cannot be in the past."
+            )
+        return value
+    

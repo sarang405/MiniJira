@@ -18,10 +18,6 @@ const TaskCard = ({
   currentUser, 
 }) => {
 const userId = Number(currentUser?.id);
-console.log(issue);
-console.log("ASSIGNEE:", issue.assignee?.id);
-console.log("USER ID:", userId);
-console.log("FULL currentUser:", currentUser); 
 
 const isOverdue =
   issue.due_date && new Date(issue.due_date) < new Date();

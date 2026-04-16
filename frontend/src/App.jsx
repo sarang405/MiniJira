@@ -24,10 +24,12 @@ import ProjectSummary from './pages/project/ProjectSummary';
 import ProjectBoard from './pages/project/ProjectBoard';
 import ProjectBacklog from './pages/project/ProjectBacklog';
 import TaskDetail from './pages/TaskDetail';
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <Router>
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
